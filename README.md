@@ -1,6 +1,14 @@
-# Mr. DoomScraper
+<p align="center">
+  <img src="assets/logo.png" alt="Mr. DoomScraper" width="180">
+</p>
 
-Turn the reels, shorts, and posts you doomscroll into **researched, structured Markdown notes** — automatically.
+<h1 align="center">Mr. DoomScraper</h1>
+
+<p align="center">
+  Turn the reels, shorts, and posts you doomscroll into <strong>researched, structured Markdown notes</strong> — automatically.
+</p>
+
+---
 
 You save a link (or send it to a Telegram bot); DoomScraper pulls the post, transcribes the audio, **researches the actual topic on the web with Claude**, and writes a clean note you can actually act on. The post is treated as a *pointer* to a topic — not the source of truth — so you get real research (official sites, Reddit, Hacker News, reviews with dates), not a reel summary.
 
