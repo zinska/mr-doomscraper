@@ -48,6 +48,13 @@ RANDOM_FIND_TPL  = TEMPLATE_DIR / "RandomFind.md"
 USER_INTERESTS   = os.getenv("USER_INTERESTS", "").strip()
 USER_PROJECTS    = os.getenv("USER_PROJECTS", "").strip()
 
+# Optional cookies for sites that require login (e.g. Instagram rate-limiting a
+# datacenter IP). Set COOKIES_FILE in .env, or drop a cookies.txt next to this
+# script; it's then passed to yt-dlp automatically.
+_cookies_env  = os.getenv("COOKIES_FILE")
+_cookies_path = Path(__file__).parent / "cookies.txt"
+COOKIES_FILE  = _cookies_env or (str(_cookies_path) if _cookies_path.exists() else None)
+
 DEPTH_MAX_SEARCHES = {"L": 3, "M": 7, "D": 12}
 DEPTH_LABEL        = {"L": "light", "M": "medium", "D": "deep"}
 DEPTH_MODEL        = {"L": "claude-haiku-4-5-20251001", "M": "claude-sonnet-4-6", "D": "claude-sonnet-4-6"}
@@ -81,19 +88,21 @@ def get_post_metadata(url: str) -> dict:
         "no_warnings": True,
         "skip_download": True,
     }
+    if COOKIES_FILE:
+        ydl_opts["cookiefile"] = COOKIES_FILE
     try:
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             return ydl.extract_info(url, download=False) or {}
     except yt_dlp.utils.DownloadError as e:
         err = str(e).lower()
-        if any(w in err for w in ("login", "authentication", "cookie", "sign in")):
-            print("ERROR: This URL requires browser cookies to access.")
+        if any(w in err for w in ("login", "authentication", "cookie", "sign in", "rate-limit")):
+            print("ERROR: This URL requires browser cookies (or the site is rate-limiting this IP).")
             print()
             print("Fix:")
             print("  1. Install the 'Get cookies.txt LOCALLY' extension in your browser.")
-            print("  2. Export cookies from the platform (while logged in).")
-            print("  3. Save as  cookies.txt  in this folder.")
-            print("  4. In scrape.py, add  'cookiefile': 'cookies.txt'  to ydl_opts.")
+            print("  2. Log in to the platform, then export cookies with the extension.")
+            print("  3. Save the file as  cookies.txt  next to scrape.py")
+            print("     (or set COOKIES_FILE=/path/to/cookies.txt in .env).")
         else:
             print(f"ERROR: yt-dlp could not fetch metadata — {e}")
         sys.exit(1)
@@ -184,6 +193,8 @@ def download_audio(url: str, tmpdir: str) -> str:
         "no_warnings": True,
         "noprogress": True,
     }
+    if COOKIES_FILE:
+        ydl_opts["cookiefile"] = COOKIES_FILE
     try:
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             ydl.download([url])

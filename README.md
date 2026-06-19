@@ -126,6 +126,7 @@ All config is via `.env` (see [`.env.example`](.env.example)). Everything except
 |----------|---------|---------|
 | `OPENAI_API_KEY` | — | **Required.** Whisper transcription |
 | `ANTHROPIC_API_KEY` | — | **Required.** Claude research |
+| `COOKIES_FILE` | `./cookies.txt` if present | yt-dlp cookies for gated/rate-limited sites |
 | `OUTPUT_DIR` | `./notes` | Base folder for generated notes |
 | `TEMPLATE_DIR` | bundled `templates/` | Note templates |
 | `USER_INTERESTS` | — | Personalizes Tool "Project idea" suggestions |
@@ -140,7 +141,7 @@ All config is via `.env` (see [`.env.example`](.env.example)). Everything except
 
 ## Troubleshooting
 
-- **"This URL requires browser cookies"** — some platforms gate access. Export cookies with a "Get cookies.txt" browser extension, save as `cookies.txt`, and add `"cookiefile": "cookies.txt"` to the yt-dlp options in `scrape.py`.
+- **"This URL requires browser cookies" / Instagram rate-limited** — some platforms gate access, and Instagram throttles anonymous fetches from datacenter IPs (common on a VPS). Export a `cookies.txt` from a logged-in browser (the "Get cookies.txt LOCALLY" extension), then set `COOKIES_FILE` or just drop the file next to `scrape.py` — it's passed to yt-dlp automatically. Keep `cookies.txt` private; it's gitignored.
 - **No audio / meaningless transcript** — DoomScraper detects music/silence/loops and falls back to the caption automatically.
 - **Note came back unstructured** — it auto-retries at a higher depth; you can also just rerun with `--depth M`.
 
