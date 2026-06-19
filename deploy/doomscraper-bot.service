@@ -1,0 +1,18 @@
+[Unit]
+Description=DoomScraper Telegram Bot
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+# Adjust User and the two paths below to match your install location.
+User=doomscraper
+WorkingDirectory=/opt/doomscraper
+EnvironmentFile=/opt/doomscraper/.env
+ExecStart=/opt/doomscraper/venv/bin/python bot.py
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

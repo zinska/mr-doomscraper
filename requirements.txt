@@ -1,0 +1,5 @@
+yt-dlp
+openai
+anthropic
+python-dotenv
+python-telegram-bot>=21.0

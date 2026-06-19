@@ -1,0 +1,17 @@
+# Secrets / local config
+.env
+
+# Generated notes (default OUTPUT_DIR)
+notes/
+
+# Optional browser cookies for gated sites
+cookies.txt
+
+# Python
+__pycache__/
+*.pyc
+
+# Editor / OS
+.claude
+.DS_Store
+Thumbs.db
